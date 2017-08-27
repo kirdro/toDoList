@@ -8,19 +8,25 @@
 
 import UIKit
 
-var rootItem: ToDoItem {
-    return ToDoItem.init(name: "Root")
+var pathForSaveData: String {
+    let path = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.libraryDirectory, FileManager.SearchPathDomainMask.userDomainMask, true)[0] + "/data.plist"
+    print(path)
+    return path
 }
+
+var rootItem: ToDoItem?
 
 //MARK - create model
-class Model {
-//MARK - load data
-    func loadData() {
-        
+func loadData() {
+    if let dict = NSDictionary(contentsOfFile: pathForSaveData) {
+        rootItem = ToDoItem(dictionary: dict)
     }
-//    MARK - save data
-    func saveData() {
-        
+    else {
+        rootItem = ToDoItem(name: "ToDo")
     }
-
 }
+//    MARK - save data
+func saveData() {
+    rootItem?.dictionary.write(toFile: pathForSaveData, atomically: true) 
+}
+ 
